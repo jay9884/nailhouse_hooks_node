@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const {getSalt, getExpiredTime, getHash} = require('../lib/hash');
 const knexquery = require('../user/user.knex');
-const {createToken} = require('../lib/token');
+// const {createToken} = require('../lib/token');
 
 const connectStatus = {}
 
@@ -125,65 +126,122 @@ router.post('/login', (req, res) => {
         return
       }
 
+      const createToken = (nickname, key) => jwt.sign(
+        { nickname: nickname}, 
+        key, 
+        { expiresIn: '1h' }
+      );
+
       //토큰 및 세션 만료 시간
       const key = process.env.REACT_APP_SECRET_KEY;
       const token = createToken(user.nickname, key);
 
       const expired = getExpiredTime();
-      connectStatus[id] = {
+      connectStatus[user.nickname] = {
         token, expired
       }
-
 
       res.json({
         token, expired
       })
+      
+    }).catch((err) => {
+      console.log(err);
     })
 })
 
-router.get('/check_token', (req, res) => {
-  const token = req.headers['_token_'];
+router.get('/decode', (req, res, next) => {
+  const token = req.headers['authorization'];
   const key = process.env.REACT_APP_SECRET_KEY;
   const decoded = jwt.verify(token, key);
   const nickname = decoded.nickname;
 
-  console.log(decoded);
-
-  if (req.headers['access-control-request-headers'] === 'x-access-token') {
-    console.log(token);
-    console.log('token nono???')
-    return res.json({message: '???'});
-  }
-
-  if(token) {
-    return res.json({nickname: nickname});
-  } else {
-    console.log('유저가 로그인하지 않은 채로 사용 중입니다.');
-  }
+  return res.json({nickname: nickname});
 })
 
-// 유저 상세 조회 API
-router.get('/:id', (req, res) => {
-  const token = req.headers['_token_'];
-  const key = process.env.REACT_APP_SECRET_KEY;
-  const decoded = jwt.verify(token, key);
-  console.log(decoded);
+// 로그인이 되었는지 확인하는 미들웨어 생성
+router.use('/:nickname', (req, res, next) => {
+  const {nickname} = req.params
+  if (!nickname) {
+    res.status(404).json({})
+  }
 
-  return res.json({token: token, decoded: decoded});
+  const connection = connectStatus[nickname]
+  if (!connection) {
+    res.status(401).json({message: '해당 계정의 로그인 기록이 없습니다.'})
+    return
+  }
 
-  // return knexquery.userFindById(id)
-  //   .then(user => {
-  //     if(!user) {
-  //       res.status(404).json({})
-  //     }
+  const token = req.headers['authorization']
+  if (!token) {
+    res.status(401).json({message: 'token 정보를 입력해주세요.'})
+    return
+  }
 
-  //     res.json({
-  //       id: user.id,
-  //       name: user.name,
-  //       createdAt: user.createdAt,
-  //       updatedAt: user.updatedAt
-  //     })
-  //   })
+  if (token !== connection.token) {
+    res.status(401).json({message: 'token 정보가 올바르지않습니다.'})
+    return
+  }
+
+  if (Date.now() > connection.expired) {
+    res.status(401).json({message: '해당 계정의 로그인 접속시간이 만료되었습니다.'})
+    return
+  }
+
+  // token 만료시간 갱신
+  connection.expired = getExpiredTime()
+
+  next()
 })
+
+// router.get('/:nickname', (req, res) => {
+//   res.json({message: '로그인 됐당'})
+// })
+
+
+// router.get('/check_token', (req, res) => {
+//   const token = req.headers['_token_'];
+//   const key = process.env.REACT_APP_SECRET_KEY;
+//   const decoded = jwt.verify(token, key);
+//   const nickname = decoded.nickname;
+
+//   console.log(decoded);
+
+//   if (req.headers['access-control-request-headers'] === 'x-access-token') {
+//     console.log(token);
+//     console.log('token nono???')
+//     return res.json({message: '???'});
+//   }
+
+//   if(token) {
+//     return res.json({nickname: nickname});
+//   } else {
+//     console.log('유저가 로그인하지 않은 채로 사용 중입니다.');
+//   }
+// })
+
+// // 유저 상세 조회 API
+// router.get('/:id', (req, res) => {
+//   const token = req.headers['_token_'];
+//   const key = process.env.REACT_APP_SECRET_KEY;
+//   const decoded = jwt.verify(token, key);
+//   console.log(decoded);
+
+//   return res.json({token: token, decoded: decoded});
+
+//   // return knexquery.userFindById(id)
+//   //   .then(user => {
+//   //     if(!user) {
+//   //       res.status(404).json({})
+//   //     }
+
+//   //     res.json({
+//   //       id: user.id,
+//   //       name: user.name,
+//   //       createdAt: user.createdAt,
+//   //       updatedAt: user.updatedAt
+//   //     })
+//   //   })
+// })
 
 module.exports = router;
