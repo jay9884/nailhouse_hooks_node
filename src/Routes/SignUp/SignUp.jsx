@@ -11,7 +11,7 @@ import SignUpUserSns from './SignUpUserSns'
 import SignUpSignIn from './SignUpSignIn'
 
 const Container = styled.div`
-  width: 360px;
+  width: 100%;
   padding: 60px 0;
 `
 

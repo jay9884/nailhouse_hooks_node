@@ -9,3 +9,9 @@ export const SignUpInputTitle = styled.h1`
   font-weight: 700;
   color: #292929;
 `
+
+// const SignUpInputTitlee = ({text}) => {
+//   <SignUpInputTitle>{text}</SignUpInputTitle>
+// }
+
+// export default SignUpInputTitlee

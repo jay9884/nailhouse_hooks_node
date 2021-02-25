@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Switch,
   Route,
   Redirect
@@ -8,10 +8,14 @@ import {
 import Login from '../Routes/Login';
 import SignUp from '../Routes/SignUp'
 import Test from '../Routes/TestPage/Test';
+import Category from './Category';
+import Gnb from './Gnb';
 
 const PageRouter = () => {
   return (
     <Router>
+      <Gnb />
+      <Category />
       <Switch>
         <Route path="/test" exact component={Test} />
         <Route path="/signup" exact component={SignUp} />

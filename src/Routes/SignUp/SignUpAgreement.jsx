@@ -115,8 +115,10 @@ const SignUpAgreement = () => {
               type="checkbox"
               checked={ageChecked}
               onChange={handleOnAgeChange}/>
-            <AgreementText>만 14세 이상입니다.</AgreementText>
-            <RequirementText>(필수)</RequirementText>
+            <AgreementText>만 14세 이상입니다.
+              <RequirementText>(필수)</RequirementText>
+            </AgreementText>
+            
           </ItemContainer>
 
           <ItemContainer>
@@ -124,8 +126,9 @@ const SignUpAgreement = () => {
               type="checkbox"
               checked={policyChecked}
               onChange={handleOnPolicyChange}/>
-            <AgreementText>이용약관</AgreementText>
-            <RequirementText>(필수)</RequirementText>
+            <AgreementText>이용약관
+              <RequirementText>(필수)</RequirementText>
+            </AgreementText>
           </ItemContainer>
 
           <ItemContainer>
@@ -133,8 +136,10 @@ const SignUpAgreement = () => {
               type="checkbox"
               checked={privacyChecked}
               onChange={handleOnPrivacyChange}/>
-            <AgreementText>개인정보처리방침</AgreementText>
-            <RequirementText>(필수)</RequirementText>
+            <AgreementText>개인정보처리방침
+              <RequirementText>(필수)</RequirementText>
+            </AgreementText>
+            
           </ItemContainer>
 
           <ItemContainer>
@@ -142,10 +147,12 @@ const SignUpAgreement = () => {
               type="checkbox"
               checked={commercialChecked}
               onChange={handleOnCommercialChange}/>
-            <AgreementText>이벤트, 프로모션 알림 메일 및 SNS 수신</AgreementText>
-            <RequirementText
-              style={{color: "#dbdbdb"}}>
-              (선택)</RequirementText>
+            <AgreementText>이벤트, 프로모션 알림 메일 및 SNS 수신
+              <RequirementText
+                style={{color: "#dbdbdb"}}>
+                (선택)
+              </RequirementText>
+            </AgreementText>
           </ItemContainer>
 
         </BottonContainer>

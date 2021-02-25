@@ -144,7 +144,7 @@ router.post('/login', (req, res) => {
       res.json({
         token, expired
       })
-      
+
     }).catch((err) => {
       console.log(err);
     })
@@ -154,6 +154,7 @@ router.get('/decode', (req, res, next) => {
   const token = req.headers['authorization'];
   const key = process.env.REACT_APP_SECRET_KEY;
   const decoded = jwt.verify(token, key);
+  console.log(decoded);
   const nickname = decoded.nickname;
 
   return res.json({nickname: nickname});

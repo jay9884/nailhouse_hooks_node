@@ -10,7 +10,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 360px;
+  width: 100%;
   padding: 40px 30px;
 `
 
@@ -65,11 +65,12 @@ const Login = (props) => {
       localStorage.setItem("authorization", token);
       axios.defaults.headers.common["authorization"] = token
       console.log('로그인페이지', axios.defaults.headers)
-      push('/')
-      // window.location.replace("/")
+      // push('/')
+      window.location.replace("/")
     }).catch(error => { 
+      console.log(error.response)
       const { data: { message }} = error.response
-      console.log('error : ',error.response)
+      console.log('error : ', error.response)
       alert(message)
     });
   }
