@@ -41,7 +41,7 @@ const GnbPc = () => {
         <NavMenu />
       </ContainerLeft>
       <ContainerRigth>
-        <Search />
+        <Search isPc={true}/>
         {token 
           ? <Authorized />
           : <Unauthorized />}

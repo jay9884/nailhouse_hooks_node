@@ -13,7 +13,7 @@ const Container = styled.div`
 const LogoDiv = styled.div`
   width: 88px;
   height: 31px;
-  padding-top: 40px;
+  margin-top: 40px;
 `
 
 const LogoImg = styled.img`
@@ -42,11 +42,11 @@ export default (() =>{
     return (
       <>
       <div className="container">
-        <LogoDiv>
-          <Link to="/">
+        <Link to="/">
+          <LogoDiv>
             <LogoImg src="/logo.svg" alt="내일의 집"/>
-          </Link>
-        </LogoDiv>
+          </LogoDiv>
+        </Link>
       </div>
       <div className="container">
         <div className="row">

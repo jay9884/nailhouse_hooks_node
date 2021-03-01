@@ -71,10 +71,22 @@ const userFindById = id => {
 //     .andWhere('id', id)
 // }
 
+const userProfileImg = (nickname) => {
+  if (!nickname) {
+    return Promise.reject('nickname 값이 없습니다.')
+  }
+
+  return db(USER)
+    .select('profile_pathname')
+    .andWhere('nickname', nickname)
+    .then(([item]) => item)
+}
+
 module.exports = {
   userFindAll,
   userCreate,
   userCheckById,
   userCheckByName,
-  userFindById
+  userFindById,
+  userProfileImg
 }

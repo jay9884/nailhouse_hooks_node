@@ -19,7 +19,7 @@ const Authorized = () => {
       <HoverIcon icon="cart" 
             size={24} />
     </HoverIconDiv>
-    <UserProfile />
+    <UserProfile isMobile={false}/>
     </>
   )
 }

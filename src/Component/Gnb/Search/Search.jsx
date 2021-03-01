@@ -7,7 +7,7 @@ import Icon from '../../TagStyle/Icon'
 
 const Container = styled.div`
   position: relative;
-  width: 264px;
+  width: ${props => props.width ? props.width : 264+"px"};
 `
 
 const IconDiv = styled.div`
@@ -53,17 +53,23 @@ const AllClearButton = styled.button`
   cursor: pointer;
 `
 
-const Search = () => {
+const Search = ({isPc, isMobile}) => {
   const [inputValue, setInputValue] = useState('')
-  const [searchHistory, setSearchHistory] = useState([])
+  const [searchHistory, setSearchHistory] 
+    = useState(localStorage.getItem('searchHistory').split(','))
   const [isTyping, setIsTyping] = useState(false)
   const [isClicked, setIsClicked] = useState(false)
 
+  const handleOnBlur = () => {
+    setIsClicked(false)
+    setIsTyping(false)
+  }
+
   //close 버튼 클릭 시 검색어 검색기록 배열에서 지움
-  const deleteHistories = (createdAt) => {
+  const deleteHistories = (content) => {
     const newSearchHistory = 
       [...searchHistory]
-        .filter((v) => v.createdAt !== createdAt)
+        .filter((v) => v !== content)
 
     setSearchHistory(newSearchHistory)
   }
@@ -97,32 +103,39 @@ const Search = () => {
     
     //동일한 검색기록이 있으면 이전 검색어 삭제
     newSearchHistory.forEach((v, i) => {
-      if(v.content === e.currentTarget.value) {
+      if(v === e.currentTarget.value) {
         newSearchHistory.splice(i, 1);
       } 
     })
 
-    newSearchHistory.push({
-      createdAt: Date.now(),
-      content: e.currentTarget.value
-    })
+    newSearchHistory.push(e.currentTarget.value)
     setSearchHistory(newSearchHistory)
+
+    window.location.replace(`/?=${e.currentTarget.value}`)
   }
 
   useEffect(() => {
     const newSearchHistory = [...searchHistory]
+
+    //빈 배열 요소 제거
+    newSearchHistory.forEach((v) => v !== "")
     
     //검색기록이 5개를 초과할 경우 가장 첫번째 요소 지움
     if(newSearchHistory.length > 5) {
       newSearchHistory.shift()
       setSearchHistory(newSearchHistory)
     }
+    // console.log(searchHistory)
+    localStorage.setItem('searchHistory', searchHistory)
+    // console.log(localStorage.getItem('searchHistory'))
   }, [searchHistory])
 
   return (
     <>
-    <Container>
-      <SearchInput 
+    <Container 
+      width={isMobile ? "87%" : null}
+      >
+      <SearchInput
         type="text"
         placeholder="스토어 검색"
         value={inputValue}
@@ -136,13 +149,13 @@ const Search = () => {
           color="#858896" />
       </IconDiv>
 
-      {isTyping && inputValue && (
+      {isPc && isTyping && inputValue && (
         <ContainerUl>
           <SearchTyping value={inputValue}/>
         </ContainerUl>
       )}
 
-      {(isClicked && searchHistory.length) 
+      {!isPc || (isPc && isClicked && searchHistory.length)
         ? (<ContainerUl>
             <UlHeader>
               <UlTitle>최근 검색어</UlTitle>
@@ -152,10 +165,10 @@ const Search = () => {
                   전체 삭제
               </AllClearButton>
             </UlHeader>
-            {searchHistory.reverse().map((v) => 
+            {searchHistory.map((v) => 
               <SearchList 
                 item={v}
-                key={v.createdAt}
+                key={v}
                 deleteHistories={deleteHistories}/>
             )}
           </ContainerUl>)

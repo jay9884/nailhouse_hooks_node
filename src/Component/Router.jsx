@@ -20,6 +20,7 @@ const PageRouter = () => {
         <Route path="/test" exact component={Test} />
         <Route path="/signup" exact component={SignUp} />
         <Route path="/login" exact component={Login} />
+        <Route path="/productions" exact component={Productions} />
         <Redirect from="*" to="/" />
       </Switch>
     </Router>

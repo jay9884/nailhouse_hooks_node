@@ -3,7 +3,6 @@ import styled from  'styled-components'
 import axios from 'axios'
 import GlobalStyles from './Component/GlobalStyles'
 import Router from './Component/Router'
-import ReactModal from './Component/ReactModal'
 
 const Layout = styled.div``
 
@@ -12,6 +11,13 @@ const App = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('authorization')
+    const expired = localStorage.getItem('expired')
+    if(expired && (Date.now() > expired)) {
+      localStorage.removeItem('authorization')
+      localStorage.removeItem('expired')
+      alert('토큰 시간이 만료되어 로그아웃되었습니다')
+    }
+
     if(token) {
       axios.get('http://localhost:3001/api/user/decode', {
         headers: {
@@ -34,7 +40,6 @@ const App = () => {
       <Layout>
         <Router />
       </Layout>
-      <ReactModal />
       로그인할 때 토큰을 로컬스토리지에 저장한 경우: {username ? username : 'annonymous'}
     </>
   )

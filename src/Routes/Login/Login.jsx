@@ -62,7 +62,9 @@ const Login = (props) => {
     }).then((response) => {
       console.log(response)
       const {data: { token }} = response
-      localStorage.setItem("authorization", token);
+      const {data: { expired }} = response
+      localStorage.setItem("authorization", token)
+      localStorage.setItem("expired", expired)
       axios.defaults.headers.common["authorization"] = token
       console.log('로그인페이지', axios.defaults.headers)
       // push('/')
@@ -77,9 +79,11 @@ const Login = (props) => {
 
   return (
     <Container>
-      <LogoDiv>
-        <LogoImg src="/logo.svg" alt="내일의 집" />
-      </LogoDiv>
+      <Link to="/">
+        <LogoDiv>
+          <LogoImg src="/logo.svg" alt="내일의 집" />
+        </LogoDiv>
+      </Link>
 
       <LoginForm
         onSubmit={handleOnSubmit}>

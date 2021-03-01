@@ -12,6 +12,7 @@ const Container = styled.ul`
   padding: 8px 8px 8px 8px;
   border: 1px solid #E0E2E7;
   border-radius: 4px;
+  background-color: #ffffff;
   transition: border-color 200ms ease-in, padding 200ms ease-in,
           max-height 200ms ease-in, box-shadow 200ms ease-in;
 
@@ -58,6 +59,7 @@ const Items = styled.li`
 const UserProfileDropDown = () => {
   const handleOnClick = () => {
     localStorage.removeItem('authorization')
+    localStorage.removeItem('expired')
     window.location.replace('/')
   }
 

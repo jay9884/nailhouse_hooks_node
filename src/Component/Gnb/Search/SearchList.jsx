@@ -35,12 +35,12 @@ const IconDiv = styled.button`
 
 const SearchList = ({item, deleteHistories}) => {
   const handleOnClick = () => {
-    deleteHistories(item.createdAt)
+    deleteHistories(item)
   }
 
   return (
       <SearchListItem>
-        {item.content}
+        {item}
         <IconDiv
           onClick={handleOnClick}>
           <Icon

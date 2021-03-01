@@ -129,7 +129,7 @@ router.post('/login', (req, res) => {
       const createToken = (nickname, key) => jwt.sign(
         { nickname: nickname}, 
         key, 
-        { expiresIn: '1h' }
+        { expiresIn: '2h' }
       );
 
       //토큰 및 세션 만료 시간
@@ -154,7 +154,6 @@ router.get('/decode', (req, res, next) => {
   const token = req.headers['authorization'];
   const key = process.env.REACT_APP_SECRET_KEY;
   const decoded = jwt.verify(token, key);
-  console.log(decoded);
   const nickname = decoded.nickname;
 
   return res.json({nickname: nickname});
@@ -190,9 +189,22 @@ router.use('/:nickname', (req, res, next) => {
   }
 
   // token 만료시간 갱신
-  connection.expired = getExpiredTime()
+  // connection.expired = getExpiredTime()
 
   next()
+})
+
+router.get('/:nickname/profile', (req, res) => {
+  const {nickname} = req.params;
+  console.log(nickname)
+  try{
+    return knexquery.userProfileImg(nickname)
+      .then((result) => {
+        res.json({result})
+      })
+  } catch(err) {
+    console.error(err);
+  }
 })
 
 // router.get('/:nickname', (req, res) => {

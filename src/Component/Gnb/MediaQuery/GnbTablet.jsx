@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Link } from "react-router-dom"
 import { HoverIconDiv } from '../../TagStyle/HoverIconDiv'
@@ -6,6 +6,8 @@ import NavMenu from '../GnbComponents/NavMenu'
 import Unauthorized from '../GnbComponents/Unauthorized'
 import Authorized from '../GnbComponents/Authorized'
 import HoverIcon from '../../TagStyle/HoverIcon'
+import ReactModal from '../../ReactModal'
+import ModalInnerSearchTablet from '../ModalInner/ModalInnerSearchTablet'
 
 const Container = styled.div`
   display: flex;
@@ -29,6 +31,16 @@ const ContainerRigth = styled.div`
 const GnbTablet = () => {
   const token = localStorage.getItem('authorization')
 
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const openModal = () => {
+    setModalVisible(true)
+  }
+
+  const closeModal = () => {
+    setModalVisible(false)
+  }
+
   return (
     <Container>
       <ContainerLeft>
@@ -41,7 +53,9 @@ const GnbTablet = () => {
         <NavMenu />
       </ContainerLeft>
       <ContainerRigth>
-        <HoverIconDiv style={{marginRight: 6+"px"}}>
+        <HoverIconDiv 
+          onClick={openModal}
+          style={{marginRight: 6+"px"}}>
           <HoverIcon icon="search" 
                 size={24} />
         </HoverIconDiv>
@@ -49,6 +63,14 @@ const GnbTablet = () => {
           ? <Authorized />
           : <Unauthorized />}
       </ContainerRigth>
+      {modalVisible && (
+        <ReactModal
+          visible={modalVisible}
+          maskClosable={true}
+          closeModal={closeModal}
+          closable={false}>
+            <ModalInnerSearchTablet />
+        </ReactModal>)}
     </Container>
   )
 }
